@@ -4,12 +4,12 @@
 zenity --password --title="Easy Bitcoin Wallet Installer" | sudo -S echo ""
 
 # GUI
-selection=$(zenity --list --title="Easy Bitcoin Wallet Installer" --text="Select a wallet and click OK." --width=1176 --height=208 \
-	--column="Wallet"		--column="Description"									--column="Architecture"		--column="Ease of Use"	--column="Security"	--column="Blockchain Download" \
-	"Electrum (Recommended)"	"Electrum is an easy to use Bitcoin client."						"All"				"Very Easy"		"Very Secure"		No \
-	Bitcoin-Qt			"Bitcoin-Qt is a full Bitcoin client and builds the backbone of the network."		"All"				Medium			"Very Secure"		"Yes (Over 16GB)" \
-	Multibit			"MultiBit is a secure, lightweight, international Bitcoin wallet."			"All"				Easy			"Secure"		No \
-	Armory				"Armory is taking Bitcoin security and usability to the next level."			"64-bit only"			Hard			"Very Secure"		"Yes (over 16GB)" \
+selection=$(zenity --list --title="Easy Bitcoin Wallet Installer" --text="Select a wallet and click OK." --width=1062 --height=208 \
+	--column="Wallet"		--column="Description"								--column="Ease of Use"	--column="Security"	--column="Blockchain Download" \
+	"Electrum (Recommended)"	"Electrum is an easy to use Bitcoin client."					"Very Easy"		"Very Secure"		No \
+	Bitcoin-Qt			"Bitcoin-Qt is a full Bitcoin client and builds the backbone of the network."	Medium			"Very Secure"		"Yes (Over 16GB)" \
+	Multibit			"MultiBit is a secure, lightweight, international Bitcoin wallet."		Easy			"Secure"		No \
+	Armory				"Armory is taking Bitcoin security and usability to the next level."		Hard			"Very Secure"		"Yes (over 16GB)" \
 );
 
 # Tasks
@@ -34,11 +34,20 @@ elif [ "$selection" = "Multibit" ]; then
 	notify-send "Installation finished" "You can find Multibit by typing it's name in the upper left menu."
 elif [ "$selection" = "Armory" ]; then
 	notify-send "Installing Armory" "Please wait."
-	sudo add-apt-repository -y ppa:bitcoin/bitcoin
-	sudo apt-get -y update
-	sudo apt-get -y install bitcoin-qt bitcoind
-	wget -O /tmp/armory_0.90-beta_12.04_amd64.deb https://s3.amazonaws.com/bitcoinarmory-releases/armory_0.90-beta_12.04_amd64.deb
-	sudo dpkg -i /tmp/armory_0.90-beta_12.04_amd64.deb
-	sudo apt-get -f -y install
+	if [ "$(uname -m)" = "i686" ]; then
+		sudo add-apt-repository -y ppa:bitcoin/bitcoin
+		sudo apt-get -y update
+		sudo apt-get -y install bitcoin-qt bitcoind
+		wget -O /tmp/armory_0.90-beta_12.04_i386.deb https://s3.amazonaws.com/bitcoinarmory-releases/armory_0.90-beta_12.04_i386.deb
+		sudo dpkg -i /tmp/armory_0.90-beta_12.04_i386.deb
+		sudo apt-get -f -y install
+	elif [ "$(uname -m)" = "x86_64" ]; then
+		sudo add-apt-repository -y ppa:bitcoin/bitcoin
+		sudo apt-get -y update
+		sudo apt-get -y install bitcoin-qt bitcoind
+		wget -O /tmp/armory_0.90-beta_12.04_amd64.deb https://s3.amazonaws.com/bitcoinarmory-releases/armory_0.90-beta_12.04_amd64.deb
+		sudo dpkg -i /tmp/armory_0.90-beta_12.04_amd64.deb
+		sudo apt-get -f -y install
+	fi
 	notify-send "Installation finished" "You can find Armory by typing it's name in the upper left menu."
 fi
