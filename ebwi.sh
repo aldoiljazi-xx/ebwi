@@ -34,20 +34,16 @@ elif [ "$selection" = "Multibit" ]; then
 	notify-send "Installation finished" "You can find Multibit by typing it's name in the upper left menu."
 elif [ "$selection" = "Armory" ]; then
 	notify-send "Installing Armory" "Please wait."
+	sudo add-apt-repository -y ppa:bitcoin/bitcoin
+	sudo apt-get -y update
+	sudo apt-get -y install bitcoin-qt bitcoind
 	if [ "$(uname -m)" = "i686" ]; then
-		sudo add-apt-repository -y ppa:bitcoin/bitcoin
-		sudo apt-get -y update
-		sudo apt-get -y install bitcoin-qt bitcoind
 		wget -O /tmp/armory_0.90-beta_12.04_i386.deb https://s3.amazonaws.com/bitcoinarmory-releases/armory_0.90-beta_12.04_i386.deb
 		sudo dpkg -i /tmp/armory_0.90-beta_12.04_i386.deb
-		sudo apt-get -f -y install
 	elif [ "$(uname -m)" = "x86_64" ]; then
-		sudo add-apt-repository -y ppa:bitcoin/bitcoin
-		sudo apt-get -y update
-		sudo apt-get -y install bitcoin-qt bitcoind
 		wget -O /tmp/armory_0.90-beta_12.04_amd64.deb https://s3.amazonaws.com/bitcoinarmory-releases/armory_0.90-beta_12.04_amd64.deb
 		sudo dpkg -i /tmp/armory_0.90-beta_12.04_amd64.deb
-		sudo apt-get -f -y install
 	fi
+	sudo apt-get -f -y install
 	notify-send "Installation finished" "You can find Armory by typing it's name in the upper left menu."
 fi
